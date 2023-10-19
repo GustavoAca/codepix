@@ -28,11 +28,17 @@ type Transactions struct {
 type Transaction struct {
 	Base              `valid:"required"`
 	AccountFrom       *Account `valid:"-"`
-	Amount            float64  `json:"amount" valid:"notnull"`
+	AccountFromID     string   `gorm:"column:account_from_id;type:uuid;" valid:"notnull"`
+	Amount            float64  `json:"amount" gorm:"type:float" valid:"notnull"`
 	PixKeyTo          *PixKey  `valid:"-"`
-	Status            string   `json:"status" valid:"notnull"`
-	Description       string   `json:"description" valid:"notnull"`
-	CancelDescription string   `json:"cancel_description" valid:"notnull"`
+	PixKeyIdTo        string   `gorm:"column:pix_key_id;type:uuid" valid:"notnull"`
+	Status            string   `json:"status" gorm:"type:varchar(20)" valid:"notnull"`
+	Description       string   `json:"description" gorm:"type:varchar(255)" valid:"notnull"`
+	CancelDescription string   `json:"cancel_description" gorm:"type:varchar(255)" valid:"notnull"`
+}
+
+func init() {
+	govalidator.SetFieldsRequiredByDefault(true)
 }
 
 func (t *Transaction) isValid() error {
@@ -66,7 +72,7 @@ func NewTransactional(accountFrom *Account, amount float64, pixKeyTo *PixKey, de
 	}
 
 	transactional.ID = uuid.NewV4().String()
-	transactional.CreateAt = time.Now()
+	transactional.CreatedAt = time.Now()
 
 	err := transactional.isValid()
 	if err != nil {
@@ -78,14 +84,14 @@ func NewTransactional(accountFrom *Account, amount float64, pixKeyTo *PixKey, de
 
 func (t *Transaction) Completed() error {
 	t.Status = TransactionCompleted
-	t.UpdateAt = time.Now()
+	t.UpdatedAt = time.Now()
 	err := t.isValid()
 	return err
 }
 
 func (t *Transaction) Cancel(description string) error {
 	t.Status = TransactionError
-	t.UpdateAt = time.Now()
+	t.UpdatedAt = time.Now()
 	t.Description = description
 	err := t.isValid()
 	return err
@@ -93,7 +99,7 @@ func (t *Transaction) Cancel(description string) error {
 
 func (t *Transaction) Confirm() error {
 	t.Status = TransactionConfirmed
-	t.UpdateAt = time.Now()
+	t.UpdatedAt = time.Now()
 	err := t.isValid()
 	return err
 }
