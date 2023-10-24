@@ -3,7 +3,6 @@ package kafka
 import (
 	"fmt"
 	"os"
-
 	"github.com/codepix/imersao/codepix-go/application/factory"
 	appmodel "github.com/codepix/imersao/codepix-go/application/model"
 	"github.com/codepix/imersao/codepix-go/application/usecase"

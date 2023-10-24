@@ -6,7 +6,6 @@ package cmd
 
 import (
 	"os"
-
 	"github.com/codepix/imersao/codepix-go/application/grpc"
 	"github.com/codepix/imersao/codepix-go/application/kafka"
 	"github.com/codepix/imersao/codepix-go/infra/db"

@@ -7,7 +7,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-
 	"github.com/codepix/imersao/codepix-go/application/kafka"
 	"github.com/codepix/imersao/codepix-go/infra/db"
 	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
